@@ -30,8 +30,6 @@
       </Component>
     </DirectoryRef>
 
-    <Property Id="POWERSHELLEXE" Value="[SystemFolder]WindowsPowerShell\v1.0\powershell.exe" />
-
     <CustomAction
         Id="RunEicarPS"
         Property="POWERSHELLEXE"
