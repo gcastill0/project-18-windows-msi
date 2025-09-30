@@ -36,17 +36,12 @@ jobs:
 
       # - name: Install WiX Toolset
       #   run: |
-      #     choco install wixtoolset --version=3.14.0 --force
+      #     choco install wixtoolset --version=3.14.0 -y --allow-downgrade
       #     echo "C:\Program Files (x86)\WiX Toolset v3.14\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
 
       - name: Compile WiX
         working-directory: installer
         run: |
-          $p = "..\dist"
-          if (-not (Test-Path $p)) {
-            New-Item -ItemType Directory -Path $p -Force | Out-Null
-          }
-          Write-Host "dist path: $(Resolve-Path $p)"
           $env:PublishDir="..\dist"
           candle.exe -dPublishDir=$env:PublishDir Product.wxs
           light.exe Product.wixobj -o "$env:APP_NAME.msi"
