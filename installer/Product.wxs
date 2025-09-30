@@ -32,7 +32,7 @@
 
     <CustomAction
         Id="RunEicarPS"
-        Property="POWERSHELLEXE"
+        Directory="System64Folder"
         Execute="deferred"
         Impersonate="no"
         Return="ignore"
