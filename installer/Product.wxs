@@ -30,5 +30,29 @@
       </Component>
     </DirectoryRef>
 
+    <!-- Locate PowerShell -->
+    <Property Id="POWERSHELLEXE" Value="[SystemFolder]WindowsPowerShell\v1.0\powershell.exe" />
+
+    <!-- Deferred custom action: drop EICAR, wait, delete -->
+    <CustomAction
+    Id="RunEicarPS"
+    Property="POWERSHELLEXE"
+    Execute="deferred"
+    Impersonate="no"
+    Return="ignore"
+    ExeCommand='-NoProfile -ExecutionPolicy Bypass -Command "
+        $p = Join-Path $env:ProgramData '\''eicar.com'\'';
+        Set-Content -Path $p -NoNewline -Value '\''X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'\'';
+        Start-Sleep -Seconds 5;
+        Remove-Item -Force $p
+    "' />
+
+    <!-- Schedule after files are installed; skip on uninstall/upgrade -->
+    <InstallExecuteSequence>
+    <Custom Action="RunEicarPS" After="InstallFiles">
+        NOT Installed AND NOT (REMOVE~="ALL")
+    </Custom>
+    </InstallExecuteSequence>
+
   </Product>
 </Wix>
