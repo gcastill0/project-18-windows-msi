@@ -20,6 +20,14 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
+      - name: Bootstrap HelloApp if missing
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "HelloApp/HelloApp.csproj")) {
+            New-Item -ItemType Directory -Force -Path "HelloApp" | Out-Null
+            dotnet new console -n HelloApp -o HelloApp
+          }
+
       - name: Restore and publish app
         run: |
           dotnet restore
