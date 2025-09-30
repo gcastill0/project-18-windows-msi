@@ -34,10 +34,10 @@ jobs:
           dotnet publish ./HelloApp/HelloApp.csproj -c $env:CONFIG -r win-x64 --self-contained true `
             -p:PublishSingleFile=true -p:PublishTrimmed=true -o dist
 
-      - name: Install WiX Toolset
-        run: |
-          choco install wixtoolset --version=3.14.0 -y --allow-downgrade
-          echo "C:\Program Files (x86)\WiX Toolset v3.14\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+      # - name: Install WiX Toolset
+      #   run: |
+      #     choco install wixtoolset --version=3.14.0 --force
+      #     echo "C:\Program Files (x86)\WiX Toolset v3.14\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
 
       - name: Compile WiX
         working-directory: installer
