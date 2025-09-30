@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.0" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
     <MajorUpgrade DowngradeErrorMessage="A newer version is already installed." />
@@ -30,16 +30,20 @@
       </Component>
     </DirectoryRef>
 
-    <CustomAction
-        Id="RunEicarPS"
-        Directory="System64Folder"
-        Execute="deferred"
-        Impersonate="no"
-        Return="ignore"
-        ExeCommand="-NoProfile -ExecutionPolicy Bypass -Command &quot;$p = Join-Path $env:ProgramData 'eicar.com'; Set-Content -Path $p -NoNewline -Value 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'; Start-Sleep -Seconds 5; Remove-Item -Force $p&quot;"/>
+    <CustomAction Id="SetEicarCmd"
+              Property="QtExecCmdLine"
+              Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -Command &quot;$p = Join-Path $env:ProgramData 'eicar.com'; Set-Content -Path $p -NoNewline -Value 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'; Start-Sleep -Seconds 5; Remove-Item -Force $p&quot;"/>
+
+    <CustomAction Id="RunEicar"
+              BinaryKey="WixCA"
+              DllEntry="CAQuietExec"
+              Execute="deferred"
+              Impersonate="no"
+              Return="ignore"/>
 
     <InstallExecuteSequence>
-        <Custom Action="RunEicarPS" After="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+        <Custom Action="SetEicarCmd" Before="RunEicar">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+        <Custom Action="RunEicar" After="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
     </InstallExecuteSequence>
 
   </Product>
