@@ -32,20 +32,16 @@
 
     <Property Id="POWERSHELLEXE" Value="[SystemFolder]WindowsPowerShell\v1.0\powershell.exe" />
 
-    <Property Id="POWERSHELLEXE" Value="[SystemFolder]WindowsPowerShell\v1.0\powershell.exe"/>
-
     <CustomAction
-    Id="RunEicarPS"
-    Property="POWERSHELLEXE"
-    Execute="deferred"
-    Impersonate="no"
-    Return="ignore"
-    ExeCommand="-NoProfile -ExecutionPolicy Bypass -Command &quot;$p = Join-Path $env:ProgramData 'eicar.com'; Set-Content -Path $p -NoNewline -Value 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'; Start-Sleep -Seconds 5; Remove-Item -Force $p&quot;"/>
+        Id="RunEicarPS"
+        Property="POWERSHELLEXE"
+        Execute="deferred"
+        Impersonate="no"
+        Return="ignore"
+        ExeCommand="-NoProfile -ExecutionPolicy Bypass -Command &quot;$p = Join-Path $env:ProgramData 'eicar.com'; Set-Content -Path $p -NoNewline -Value 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'; Start-Sleep -Seconds 5; Remove-Item -Force $p&quot;"/>
 
     <InstallExecuteSequence>
-        <Custom Action="RunEicarPS" After="InstallFiles">
-            NOT Installed AND NOT (REMOVE~="ALL")
-        </Custom>
+        <Custom Action="RunEicarPS" After="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
     </InstallExecuteSequence>
 
   </Product>
