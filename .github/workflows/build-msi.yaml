@@ -69,4 +69,4 @@ jobs:
             HelloApp.msi
             HelloApp.msi.sha256.txt
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MSIBUILDER_TOKEN }}
