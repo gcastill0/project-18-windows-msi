@@ -35,7 +35,7 @@
 
     <CustomAction Id="SetEicarCmd"
               Property="QtExecCmdLine"
-              VaValue="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[#filEicarPs1]&quot;"/>
+              Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[#filEicarPs1]&quot;"/>
 
     <CustomAction Id="RunEicar"
               BinaryKey="WixCA"
