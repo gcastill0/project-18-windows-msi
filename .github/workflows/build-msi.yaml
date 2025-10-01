@@ -34,11 +34,6 @@ jobs:
           dotnet publish ./HelloApp/HelloApp.csproj -c $env:CONFIG -r win-x64 --self-contained true `
             -p:PublishSingleFile=true -p:PublishTrimmed=true -o dist
 
-      # - name: Install WiX Toolset
-      #   run: |
-      #     choco install wixtoolset --version=3.14.0 -y --allow-downgrade
-      #     echo "C:\Program Files (x86)\WiX Toolset v3.14\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
-
       - name: Compile WiX
         working-directory: installer
         shell: pwsh
@@ -54,18 +49,6 @@ jobs:
         run: |
           Get-ChildItem -Force dist
           if (-not (Test-Path "dist/HelloApp.exe")) { throw "dist/HelloApp.exe missing" }
-
-      # - name: Optional code signing
-      #   if: env.CERT_BASE64 && env.CERT_PASSWORD
-      #   env:
-      #     CERT_BASE64: ${{ secrets.CODE_SIGN_CERT_BASE64 }}
-      #     CERT_PASSWORD: ${{ secrets.CODE_SIGN_PASSWORD }}
-      #   run: |
-      #     $pfx = "$env:RUNNER_TEMP\codesign.pfx"
-      #     [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:CERT_BASE64))
-      #     & "C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe" sign `
-      #       /f $pfx /p $env:CERT_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 `
-      #       "$env:APP_NAME.msi"
 
       - name: SHA256 checksum
         run: certutil -hashfile "$env:APP_NAME.msi" SHA256 > "$env:APP_NAME.msi.sha256.txt"
