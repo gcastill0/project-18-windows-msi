@@ -42,13 +42,13 @@
     <CustomAction Id="RunEicar64"
                   BinaryKey="WixCA"
                   DllEntry="CAQuietExec64"
-                  Execute="commit"
+                  Execute="deferred"
                   Impersonate="no"
                   Return="ignore"/>
 
     <InstallExecuteSequence>
-      <Custom Action="SetEicarCmd64" After="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
-      <Custom Action="RunEicar64"   Before="InstallFinalize">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+      <Custom Action="SetEicarCmd64" Before="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+      <Custom Action="RunEicar64" Before="CreateShortcuts">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
     </InstallExecuteSequence>
   </Product>
 </Wix>
