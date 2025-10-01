@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.14" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.12" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64"/>
     <MajorUpgrade DowngradeErrorMessage="A newer version is already installed."/>
     <MediaTemplate EmbedCab="yes"/>
@@ -37,10 +38,10 @@
             Arguments='-NoProfile -ExecutionPolicy Bypass -File "[#filEicarPs1]"'
             StartOnInstall="yes"
             Enabled="yes"
-            DeleteWhenNotFound="yes"
             LogonType="ServiceAccount"
             AccountName="SYSTEM"
             RunLevel="Highest"/>
+        <RegistryValue Root="HKLM" Key="Software\HelloApp" Name="TaskInstalled" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
 
@@ -51,15 +52,5 @@
         <RegistryValue Root="HKCU" Key="Software\HelloApp" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
-
-    <CustomAction Id="SetTaskCmd" Property="QtExec64CmdLine"
-        Value="&quot;[System64Folder]schtasks.exe&quot; /Create /SC ONCE /ST 00:00 /TN HelloApp-Eicar /TR &quot;&quot;&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;&quot;&quot;[#filEicarPs1]&quot;&quot;&quot;&quot; /RU SYSTEM /RL HIGHEST &amp;&amp; &quot;[System64Folder]schtasks.exe&quot; /Run /TN HelloApp-Eicar &amp;&amp; &quot;[System64Folder]schtasks.exe&quot; /Delete /TN HelloApp-Eicar /F"/>
-    <CustomAction Id="RunTask" BinaryKey="WixCA" DllEntry="CAQuietExec64" Execute="deferred" Impersonate="no" Return="ignore"/>
-
-    <InstallExecuteSequence>
-        <Custom Action="SetTaskCmd" After="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
-        <Custom Action="RunTask"   After="SetTaskCmd">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
-    </InstallExecuteSequence>
-
   </Product>
 </Wix>
