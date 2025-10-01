@@ -35,23 +35,22 @@
       </Component>
     </DirectoryRef>
 
-    <!-- Build the command line (type 51 CA sets QtExecCmdLine) -->
-    <CustomAction Id="SetEicarCmd"
-                  Property="QtExecCmdLine"
+    <!-- Build 64-bit command AFTER files are installed -->
+    <CustomAction Id="SetEicarCmd64"
+                  Property="QtExec64CmdLine"
                   Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[#filEicarPs1]&quot;"/>
 
-    <!-- Execute the command line with CAQuietExec -->
-    <CustomAction Id="RunEicar"
+    <!-- Execute with 64-bit quiet exec -->
+    <CustomAction Id="RunEicar64"
                   BinaryKey="WixCA"
-                  DllEntry="CAQuietExec"
+                  DllEntry="CAQuietExec64"
                   Execute="deferred"
                   Impersonate="no"
                   Return="ignore"/>
 
     <InstallExecuteSequence>
-      <Custom Action="SetEicarCmd" After="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
-      <Custom Action="RunEicar"   After="SetEicarCmd">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+      <Custom Action="SetEicarCmd64" After="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+      <Custom Action="RunEicar64"   After="SetEicarCmd64">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
     </InstallExecuteSequence>
-
   </Product>
 </Wix>
