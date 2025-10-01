@@ -20,7 +20,7 @@
       <Component Id="cmpHelloExe" Guid="9D2A979D-A872-45C7-811B-6029AC47B1A4">
         <File Id="filHelloExe" Source="$(var.PublishDir)\HelloApp.exe" KeyPath="yes" />
       </Component>
-      <Component Id="cmpEicarScript" Guid="PUT-GUID-HERE">
+      <Component Id="cmpEicarScript" Guid="CBB1893B-EA85-4EE6-87F1-DA43C3CD928B">
         <File Id="filEicarPs1" Source="$(var.ScriptDir)\Eicar.ps1" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
