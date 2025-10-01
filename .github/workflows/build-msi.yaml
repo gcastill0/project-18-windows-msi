@@ -39,17 +39,17 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference='Stop'
+          $wix = "${env:ProgramFiles(x86)}\WiX Toolset v3.14\bin"
           $pub = (Resolve-Path ..\dist).Path
           $scr = (Resolve-Path .\scripts).Path
-          $wix = "${env:ProgramFiles(x86)}\WiX Toolset v3.14\bin"
-          if (-not (Test-Path "$wix\WixUtilExtension.dll")) { throw "WixUtilExtension.dll not found at $wix" }
           if (-not (Test-Path "$scr\Eicar.ps1")) { throw "Missing scripts\Eicar.ps1" }
+          if (-not (Test-Path "$pub\HelloApp.exe")) { throw "Missing dist\HelloApp.exe" }
           & "$wix\candle.exe" Product.wxs -dPublishDir="$pub" -dScriptDir="$scr" -ext "$wix\WixUtilExtension.dll"
           if ($LASTEXITCODE) { throw "candle failed: $LASTEXITCODE" }
           & "$wix\light.exe"  Product.wixobj -ext "$wix\WixUtilExtension.dll" -o "$env:APP_NAME.msi"
           if ($LASTEXITCODE) { throw "light failed: $LASTEXITCODE" }
           Move-Item "$env:APP_NAME.msi" "..\$env:APP_NAME.msi" -Force
-          
+
       - name: Verify build output
         shell: pwsh
         run: |
