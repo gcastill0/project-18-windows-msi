@@ -34,20 +34,17 @@
       </Component>
     </DirectoryRef>
 
-    <CustomAction Id="SetEicarCmd"
-              Property="QtExecCmdLine"
-              Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[#filEicarPs1]&quot;"/>
+    <Property Id="POWERSHELLEXE" Value="[SystemFolder]WindowsPowerShell\v1.0\powershell.exe"/>
 
-    <CustomAction Id="RunEicar"
-              BinaryKey="WixCA"
-              DllEntry="CAQuietExec"
+    <CustomAction Id="SetEicarCmd"
+              Property="POWERSHELLEXE"
+              ExeCommand='-NoProfile -ExecutionPolicy Bypass -File "[#filEicarPs1]"'
               Execute="deferred"
               Impersonate="no"
               Return="ignore"/>
 
     <InstallExecuteSequence>
-        <Custom Action="SetEicarCmd" Before="RunEicar">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
-        <Custom Action="RunEicar" After="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+        <Custom Action="SetEicarCmd" Before="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
     </InstallExecuteSequence>
 
   </Product>
