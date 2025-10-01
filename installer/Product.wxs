@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.5" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
+  <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.6" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
     <MajorUpgrade DowngradeErrorMessage="A newer version is already installed." />
     <MediaTemplate EmbedCab="yes" />
@@ -20,6 +20,9 @@
       <Component Id="cmpHelloExe" Guid="9D2A979D-A872-45C7-811B-6029AC47B1A4">
         <File Id="filHelloExe" Source="$(var.PublishDir)\HelloApp.exe" KeyPath="yes" />
       </Component>
+      <Component Id="cmpEicarScript" Guid="PUT-GUID-HERE">
+        <File Id="filEicarPs1" Source="$(var.ScriptDir)\Eicar.ps1" KeyPath="yes"/>
+      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="ProgramMenuFolder">
@@ -32,7 +35,7 @@
 
     <CustomAction Id="SetEicarCmd"
               Property="QtExecCmdLine"
-              Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -Command &quot;$p = Join-Path $env:ProgramData 'eicar.com'; Set-Content -Path $p -NoNewline -Value 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'; Start-Sleep -Seconds 5; Remove-Item -Force $p&quot;"/>
+              VaValue="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[#filEicarPs1]&quot;"/>
 
     <CustomAction Id="RunEicar"
               BinaryKey="WixCA"

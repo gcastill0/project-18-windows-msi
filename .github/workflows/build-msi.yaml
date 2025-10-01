@@ -44,7 +44,8 @@ jobs:
         shell: pwsh
         run: |
           $abs = (Resolve-Path ..\dist).Path
-          candle.exe -dPublishDir="$abs" -ext WixUtilExtension Product.wxs
+          $scr = (Resolve-Path .\scripts).Path
+          candle.exe -dPublishDir="$abs" -ext WixUtilExtension -dScriptDir="$scr" Product.wxs
           light.exe Product.wixobj -ext WixUtilExtension -o "$env:APP_NAME.msi"
           Move-Item "$env:APP_NAME.msi" "..\$env:APP_NAME.msi"
 
