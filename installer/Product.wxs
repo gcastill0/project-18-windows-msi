@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.6" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
+  <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.9" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
     <MajorUpgrade DowngradeErrorMessage="A newer version is already installed." />
     <MediaTemplate EmbedCab="yes" />
