@@ -6,6 +6,7 @@
     <MediaTemplate EmbedCab="yes" />
     <Feature Id="Main" Title="HelloApp" Level="1">
       <ComponentRef Id="cmpHelloExe"/>
+      <ComponentRef Id="cmpEicarScript"/>
       <ComponentRef Id="cmpShortcut"/>
     </Feature>
 
