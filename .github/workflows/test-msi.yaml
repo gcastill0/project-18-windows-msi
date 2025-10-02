@@ -1,4 +1,4 @@
-name: Build MSI
+name: Test MSI
 
 on:
   push:
