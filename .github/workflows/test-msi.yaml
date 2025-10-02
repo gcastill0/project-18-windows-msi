@@ -1,0 +1,60 @@
+name: Build MSI
+
+on:
+  push:
+    paths:
+      - 'installer/**'
+
+jobs:
+  msi:
+    runs-on: windows-latest
+    env:
+      APP_NAME: HelloApp
+      CONFIG: Release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Bootstrap HelloApp
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "HelloApp/HelloApp.csproj")) {
+            New-Item -ItemType Directory -Force -Path "HelloApp" | Out-Null
+            dotnet new console -n HelloApp -o HelloApp
+          }
+
+      - name: Restore and publish app
+        run: |
+          dotnet restore
+          dotnet publish ./HelloApp/HelloApp.csproj -c $env:CONFIG -r win-x64 --self-contained true `
+            -p:PublishSingleFile=true -p:PublishTrimmed=true -o dist
+
+      - name: Compile WiX
+        working-directory: installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $wix = "${env:ProgramFiles(x86)}\WiX Toolset v3.14\bin"
+          $pub = (Resolve-Path ..\dist).Path
+          $scr = (Resolve-Path .\scripts).Path
+          if (-not (Test-Path "$scr\Eicar.ps1")) { throw "Missing scripts\Eicar.ps1" }
+          if (-not (Test-Path "$pub\HelloApp.exe")) { throw "Missing dist\HelloApp.exe" }
+          & "$wix\candle.exe" Product.wxs -dPublishDir="$pub" -dScriptDir="$scr" -ext "$wix\WixUtilExtension.dll"
+          if ($LASTEXITCODE) { throw "candle failed: $LASTEXITCODE" }
+          & "$wix\light.exe"  Product.wixobj -ext "$wix\WixUtilExtension.dll" -o "$env:APP_NAME.msi"
+          if ($LASTEXITCODE) { throw "light failed: $LASTEXITCODE" }
+          Move-Item "$env:APP_NAME.msi" "..\$env:APP_NAME.msi" -Force
+
+      - name: Verify build output
+        shell: pwsh
+        run: |
+          Get-ChildItem -Force dist
+          if (-not (Test-Path "dist/HelloApp.exe")) { throw "dist/HelloApp.exe missing" }
+
+      - name: SHA256 checksum
+        run: certutil -hashfile "$env:APP_NAME.msi" SHA256 > "$env:APP_NAME.msi.sha256.txt"
