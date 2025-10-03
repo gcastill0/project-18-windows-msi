@@ -8,7 +8,6 @@
     <Feature Id="Main" Title="HelloApp" Level="1">
       <ComponentRef Id="cmpHelloExe"/>
       <ComponentRef Id="cmpEicarScript"/>
-      <ComponentRef Id="cmpEicarFinal"/>
       <ComponentRef Id="cmpShortcut"/>
     </Feature>
 
@@ -26,9 +25,6 @@
       <Component Id="cmpEicarScript" Guid="CBB1893B-EA85-4EE6-87F1-DA43C3CD928B" Win64="yes">
         <File Id="filEicarPs1" Source="$(var.ScriptDir)\Eicar.ps1" KeyPath="yes"/>
       </Component>
-      <Component Id="cmpEicarFinal" Guid="CBB1893B-EA85-4EE6-87F1-DA43C3CD928B" Win64="yes">
-        <File Id="filEicarPs1f" Source="Eicar.ps1" KeyPath="yes"/>
-      </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="ProgramMenuFolder">
@@ -42,7 +38,7 @@
     <!-- Build and run command via WiX CAQuietExec64 -->
     <CustomAction Id="SetEicarCmd64"
                   Property="QtExec64CmdLine"
-                  Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[#filEicarPs1f]&quot;"/>
+                  Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;C:\Program Files\HelloApp\Eicar.ps1&quot;"/>
     <CustomAction Id="RunEicar64"
                   BinaryKey="WixCA"
                   DllEntry="CAQuietExec64"
