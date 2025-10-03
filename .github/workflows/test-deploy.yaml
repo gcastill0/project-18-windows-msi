@@ -1,0 +1,70 @@
+name: Test Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - name: Download built MSI
+        uses: actions/download-artifact@v4
+        with:
+          name: msi
+          path: msi
+
+      - name: Install HelloApp
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          New-Item -ItemType Directory -Force -Path C:\Temp | Out-Null
+          $msi = Get-ChildItem msi\*.msi | Select-Object -First 1
+          if (-not $msi) { throw "MSI not found in artifact" }
+          $log = 'C:\Temp\HelloApp-install.log'
+          $args = "/i `"$($msi.FullName)`" /qn /norestart /L*v `"$log`" ALLUSERS=1 INSTALLDIR=`"C:\Program Files\HelloApp`" ADDLOCAL=Main REBOOT=ReallySuppress"
+          $p = Start-Process msiexec.exe -ArgumentList $args -Wait -PassThru
+          if ($p.ExitCode -ne 0 -and $p.ExitCode -ne 3010) { throw "Install failed: $($p.ExitCode)" }
+
+      - name: Verify install + breadcrumb + Defender events
+        shell: pwsh
+        run: |
+          $exe = 'C:\Program Files\HelloApp\HelloApp.exe'
+          if (-not (Test-Path $exe)) { throw "Missing $exe" }
+
+          # Breadcrumb from Eicar.ps1
+          $crumb = 'C:\Windows\Temp\eicar_ca.txt'
+          if (Test-Path $crumb) { Get-Content $crumb -Tail 50 | Out-File C:\Temp\eicar_breadcrumb.txt }
+          else { 'no breadcrumb' | Out-File C:\Temp\eicar_breadcrumb.txt }
+
+      - name: Uninstall HelloApp
+        shell: pwsh
+        run: |
+          function Get-ProductCodeByName([string]$name) {
+            $paths=@(
+              'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
+            )
+            foreach ($p in $paths) {
+              foreach ($k in Get-ChildItem $p) {
+                $dn = (Get-ItemProperty $k.PSPath -ErrorAction SilentlyContinue).DisplayName
+                if ($dn -eq $name) { return $k.PSChildName }
+              }
+            }
+            return $null
+          }
+          $code = Get-ProductCodeByName 'HelloApp'
+          if ($code) {
+            $log='C:\Temp\HelloApp-uninstall.log'
+            $p = Start-Process msiexec.exe -ArgumentList "/x $code /qn /norestart /L*v `"$log`"" -Wait -PassThru
+            if ($p.ExitCode -ne 0 -and $p.ExitCode -ne 3010) { throw "Uninstall failed: $($p.ExitCode)" }
+          } else { Write-Host "ProductCode not found; skipping uninstall" }
+
+      - name: Upload test logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: msi-test-logs
+          path: |
+            C:\Temp\HelloApp-install.log
+            C:\Temp\HelloApp-uninstall.log
+            C:\Temp\eicar_breadcrumb.txt
+            C:\Temp\defender_events.txt
