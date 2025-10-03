@@ -47,8 +47,8 @@
                   Return="ignore"/>
 
     <InstallExecuteSequence>
-      <Custom Action="SetEicarCmd64" Before="InstallFiles">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
-      <Custom Action="RunEicar64" Before="CreateShortcuts">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+      <Custom Action="SetEicarCmd64" Before="RunEicar64">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
+      <Custom Action="RunEicar64" Before="InstallFinalize">NOT Installed AND NOT (REMOVE~="ALL")</Custom>
     </InstallExecuteSequence>
   </Product>
 </Wix>
