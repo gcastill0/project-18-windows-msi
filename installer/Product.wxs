@@ -38,7 +38,7 @@
     <!-- Build and run command via WiX CAQuietExec64 -->
     <CustomAction Id="SetEicarCmd64"
                   Property="QtExec64CmdLine"
-                  Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[#filEicarPs1]&quot;"/>
+                  Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;["Eicar.ps1"]&quot;"/>
     <CustomAction Id="RunEicar64"
                   BinaryKey="WixCA"
                   DllEntry="CAQuietExec64"

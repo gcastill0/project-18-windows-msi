@@ -12,7 +12,7 @@ jobs:
         shell: pwsh
         run: |
           $scriptUrl  = 'https://raw.githubusercontent.com/gcastill0/project-18-windows-msi/main/dist/HelloApp-Install.ps1'
-          $scriptPath = "$env:TEMP\HelloApp-Install.ps1"
+          $scriptPath = 'C:\Users\Administrator\Desktop\HelloApp-Install.ps1'
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest -Uri $scriptUrl -OutFile $scriptPath
           Unblock-File $scriptPath
