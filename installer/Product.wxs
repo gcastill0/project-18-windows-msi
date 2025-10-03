@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.18" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
+  <Product Id="*" Name="HelloApp" Language="1033" Version="1.0.21" Manufacturer="Interrupt Software" UpgradeCode="4DDDE090-C8BD-4508-B6B5-5EF8ED95155E">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64"/>
     <MajorUpgrade DowngradeErrorMessage="A newer version is already installed."/>
     <MediaTemplate EmbedCab="yes"/>
@@ -23,7 +23,7 @@
         <File Id="filHelloExe" Source="$(var.PublishDir)\HelloApp.exe" KeyPath="yes"/>
       </Component>
       <Component Id="cmpEicarScript" Guid="CBB1893B-EA85-4EE6-87F1-DA43C3CD928B" Win64="yes">
-        <File Id="filEicarPs1" Source="$(var.ScriptDir)\Eicar.ps1" KeyPath="yes"/>
+        <File Id="filEicarPs1" Source="$(var.PublishDir)\Eicar.ps1" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
 
@@ -38,7 +38,7 @@
     <!-- Build and run command via WiX CAQuietExec64 -->
     <CustomAction Id="SetEicarCmd64"
                   Property="QtExec64CmdLine"
-                  Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[Eicar.ps1]&quot;"/>
+                  Value="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;[#filEicarPs1]&quot;"/>
     <CustomAction Id="RunEicar64"
                   BinaryKey="WixCA"
                   DllEntry="CAQuietExec64"
