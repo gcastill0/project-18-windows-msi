@@ -27,7 +27,7 @@
         <File Id="filEicarPs1" Source="$(var.ScriptDir)\Eicar.ps1" KeyPath="yes"/>
       </Component>
       <Component Id="cmpEicarFinal" Guid="CBB1893B-EA85-4EE6-87F1-DA43C3CD928B" Win64="yes">
-        <File Id="filEicarPs1f" Source="$(var.PublishDir)\Eicar.ps1" KeyPath="yes"/>
+        <File Id="filEicarPs1f" Source="Eicar.ps1" KeyPath="yes"/>
       </Component>
     </DirectoryRef>
 
