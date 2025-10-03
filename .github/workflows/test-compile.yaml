@@ -1,4 +1,4 @@
-name: Test MSI
+name: Test MSI Compile
 
 on:
   push:
