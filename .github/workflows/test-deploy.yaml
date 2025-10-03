@@ -7,23 +7,19 @@ jobs:
   test:
     runs-on: windows-latest
     steps:
-      - name: Download built MSI
-        uses: actions/download-artifact@v4
-        with:
-          name: msi
-          path: msi
 
-      - name: Install HelloApp
+      - name: Run HelloApp-Install.ps1
         shell: pwsh
         run: |
-          $ErrorActionPreference='Stop'
-          New-Item -ItemType Directory -Force -Path C:\Temp | Out-Null
-          $msi = Get-ChildItem msi\*.msi | Select-Object -First 1
-          if (-not $msi) { throw "MSI not found in artifact" }
-          $log = 'C:\Temp\HelloApp-install.log'
-          $args = "/i `"$($msi.FullName)`" /qn /norestart /L*v `"$log`" ALLUSERS=1 INSTALLDIR=`"C:\Program Files\HelloApp`" ADDLOCAL=Main REBOOT=ReallySuppress"
-          $p = Start-Process msiexec.exe -ArgumentList $args -Wait -PassThru
-          if ($p.ExitCode -ne 0 -and $p.ExitCode -ne 3010) { throw "Install failed: $($p.ExitCode)" }
+          $scriptUrl  = 'https://raw.githubusercontent.com/gcastill0/project-18-windows-msi/main/dist/HelloApp-Install.ps1'
+          $scriptPath = "$env:TEMP\HelloApp-Install.ps1"
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest -Uri $scriptUrl -OutFile $scriptPath
+          Unblock-File $scriptPath
+          $p = Start-Process powershell.exe -ArgumentList @(
+            '-NoProfile','-ExecutionPolicy','Bypass','-File', $scriptPath
+          ) -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Install script failed: $($p.ExitCode)" }
 
       - name: Verify install + breadcrumb + Defender events
         shell: pwsh
@@ -32,7 +28,7 @@ jobs:
           if (-not (Test-Path $exe)) { throw "Missing $exe" }
 
           # Breadcrumb from Eicar.ps1
-          $crumb = 'C:\Windows\Temp\eicar_ca.txt'
+          $crumb = 'C:\Users\Administrator\Desktop\eicar_ca.txt'
           if (Test-Path $crumb) { Get-Content $crumb -Tail 50 | Out-File C:\Temp\eicar_breadcrumb.txt }
           else { 'no breadcrumb' | Out-File C:\Temp\eicar_breadcrumb.txt }
 
